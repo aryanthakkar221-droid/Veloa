@@ -1,0 +1,310 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover" />
+<title>VELOA</title>
+<link rel="preconnect" href="https://fonts.googleapis.com" />
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=Spectral:ital,wght@0,400;0,500;0,600;1,400;1,500&display=swap" rel="stylesheet" />
+<style>
+  :root {
+    --violet: #534AB7;
+    --violet-soft: #7d75d6;
+    --dusk: #26215C;
+    --coral: #D85A30;
+    --coral-soft: #e8825f;
+    --haze: #EEEDFE;
+    --haze-deep: #e2dffb;
+    --warm: #F5F0EB;
+    --ink: #2b2740;
+    --ink-soft: #6a6580;
+    --card: #ffffff;
+    --field: #fbfaff;
+    --glass: rgba(255,255,255,0.78);
+    --line: rgba(38,33,92,0.07);
+    --line-strong: rgba(38,33,92,0.14);
+    --tint-coral: #fbe7de;
+    --tint-dusk: #e4e2f0;
+    --tint-green: #e0f0e6;
+    --tint-grey: #ecebf2;
+    --green-fg: #2f7d52;
+    --btn-dusk: #26215C;
+    --btn-dusk-h: #1d1947;
+    --glow-top: rgba(238,237,254,0.9);
+    --orb-glow: 120,110,210;
+    --radius: 22px;
+    --serif: Georgia, 'Spectral', 'Times New Roman', serif;
+    --sans: 'Inter', -apple-system, BlinkMacSystemFont, system-ui, sans-serif;
+    --shadow-soft: 0 10px 30px -12px rgba(38,33,92,0.18);
+    --shadow-lift: 0 18px 48px -16px rgba(38,33,92,0.28);
+    --scale: 1;
+  }
+
+  .theme-dark {
+    --violet: #7c73e8;
+    --violet-soft: #9a92ee;
+    --dusk: #ECE9F6;
+    --coral: #E8794D;
+    --coral-soft: #ef9170;
+    --haze: #2a2450;
+    --haze-deep: #332c5e;
+    --warm: #131023;
+    --ink: #ECE9F6;
+    --ink-soft: #A39DC4;
+    --card: #1f1a3a;
+    --field: #1b1636;
+    --glass: rgba(43,37,74,0.72);
+    --line: rgba(255,255,255,0.08);
+    --line-strong: rgba(255,255,255,0.17);
+    --tint-coral: rgba(232,121,77,0.18);
+    --tint-dusk: rgba(124,115,232,0.20);
+    --tint-green: rgba(70,170,110,0.20);
+    --tint-grey: rgba(255,255,255,0.08);
+    --green-fg: #62c78c;
+    --btn-dusk: #39336e;
+    --btn-dusk-h: #453e82;
+    --glow-top: rgba(83,74,183,0.22);
+    --orb-glow: 150,140,240;
+    --shadow-soft: 0 10px 30px -12px rgba(0,0,0,0.55);
+    --shadow-lift: 0 18px 48px -16px rgba(0,0,0,0.65);
+  }
+
+  * { box-sizing: border-box; -webkit-tap-highlight-color: transparent; }
+  html, body { margin: 0; padding: 0; }
+  body {
+    font-family: var(--sans);
+    background: var(--warm);
+    color: var(--ink);
+    -webkit-font-smoothing: antialiased;
+    text-rendering: optimizeLegibility;
+  }
+  .veloa-stage, .card, .btn, input, textarea { transition: background-color .4s ease, color .4s ease, border-color .4s ease; }
+  #root { min-height: 100vh; min-height: 100dvh; }
+
+  /* ---------- App backdrop ---------- */
+  .veloa-stage {
+    position: relative;
+    min-height: 100vh;
+    min-height: 100dvh;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    overflow: hidden;
+    background-color: var(--warm);
+    background-image: radial-gradient(120% 80% at 50% -10%, var(--glow-top) 0%, transparent 60%);
+  }
+  .veloa-shapes { position: fixed; inset: 0; overflow: hidden; pointer-events: none; z-index: 0; }
+  .veloa-shapes span {
+    position: absolute;
+    border-radius: 50%;
+    opacity: 0.32;
+    animation: drift linear infinite;
+  }
+  .veloa-shapes span:nth-child(1){ width:260px;height:260px;left:-80px;top:8%;background:radial-gradient(circle at 40% 40%, rgba(125,117,214,0.28), rgba(125,117,214,0)); animation-duration: 34s; }
+  .veloa-shapes span:nth-child(2){ width:200px;height:200px;right:-60px;top:40%;background:radial-gradient(circle at 50% 50%, rgba(216,90,48,0.14), rgba(216,90,48,0)); animation-duration: 42s; animation-direction: reverse; }
+  .veloa-shapes span:nth-child(3){ width:180px;height:180px;left:20%;bottom:-40px;background:radial-gradient(circle at 50% 50%, rgba(83,74,183,0.16), rgba(83,74,183,0)); animation-duration: 50s; }
+  @keyframes drift {
+    0%   { transform: translate(0,0) scale(1); }
+    50%  { transform: translate(24px,-30px) scale(1.08); }
+    100% { transform: translate(0,0) scale(1); }
+  }
+  .flourish-off .veloa-shapes { display: none; }
+
+  /* Dark mode: the floating shapes should whisper, not wash out the page. */
+  .theme-dark .veloa-shapes span:nth-child(1){ background:radial-gradient(circle at 40% 40%, rgba(124,115,232,0.18), rgba(124,115,232,0)); }
+  .theme-dark .veloa-shapes span:nth-child(2){ background:radial-gradient(circle at 50% 50%, rgba(232,121,77,0.15), rgba(232,121,77,0)); }
+  .theme-dark .veloa-shapes span:nth-child(3){ background:radial-gradient(circle at 50% 50%, rgba(124,115,232,0.14), rgba(124,115,232,0)); }
+
+  /* Streaming AI bubble caret */
+  .stream-caret { display:inline-block; width:2px; height:1em; background:var(--violet); margin-left:2px; vertical-align:-0.15em; border-radius:1px; animation:streamCaret .9s steps(1,end) infinite; }
+  @keyframes streamCaret { 0%,49%{opacity:1} 50%,100%{opacity:0} }
+
+  /* Chip tap pulse */
+  .chip-pulse { animation:chipPulse .25s ease; border-color:var(--violet) !important; box-shadow:0 0 0 4px rgba(83,74,183,0.18) !important; }
+  @keyframes chipPulse { 0%{transform:scale(1)} 35%{transform:scale(1.03)} 70%{transform:scale(0.98)} 100%{transform:scale(1)} }
+
+  .veloa-col {
+    position: relative;
+    z-index: 1;
+    width: 100%;
+    max-width: 540px;
+    margin: 0 auto;
+    flex: 1;
+    display: flex;
+    flex-direction: column;
+    padding: 0 22px;
+  }
+  .veloa-col.wide { max-width: 820px; }
+
+  /* ---------- Type ---------- */
+  .wordmark {
+    font-family: var(--serif);
+    font-weight: 400;
+    letter-spacing: 0.34em;
+    text-transform: uppercase;
+    color: var(--dusk);
+  }
+  .serif { font-family: var(--serif); }
+  h1,h2,h3 { font-family: var(--serif); font-weight: 400; color: var(--dusk); letter-spacing: -0.01em; }
+  .display { font-size: calc(2.35rem * var(--scale)); line-height: 1.1; }
+  @media (min-width: 600px){ .display { font-size: calc(2.9rem * var(--scale)); } }
+  .lede { color: var(--ink-soft); font-size: calc(1.06rem * var(--scale)); line-height: 1.6; }
+  .tag-line { font-family: var(--serif); font-style: italic; color: var(--violet); }
+
+  /* ---------- Buttons ---------- */
+  .btn {
+    font-family: var(--sans);
+    font-size: calc(1.02rem * var(--scale));
+    font-weight: 600;
+    border: none;
+    border-radius: 999px;
+    padding: 16px 26px;
+    cursor: pointer;
+    transition: transform .25s ease, box-shadow .25s ease, background .25s ease;
+    display: inline-flex; align-items: center; justify-content: center; gap: 10px;
+  }
+  .btn:active { transform: translateY(1px) scale(0.995); }
+  .btn-violet { background: var(--violet); color: #fff; box-shadow: 0 10px 24px -10px rgba(83,74,183,0.7); }
+  .btn-violet:hover { background: #4840a6; box-shadow: 0 14px 30px -10px rgba(83,74,183,0.8); }
+  .btn-coral { background: var(--coral); color: #fff; box-shadow: 0 10px 24px -10px rgba(216,90,48,0.65); }
+  .btn-coral:hover { background: #c64f29; }
+  .btn-dusk { background: var(--btn-dusk); color: #fff; }
+  .btn-dusk:hover { background: var(--btn-dusk-h); }
+  .btn-ghost { background: transparent; color: var(--violet); border: 1.5px solid rgba(83,74,183,0.32); }
+  .btn-ghost:hover { background: rgba(83,74,183,0.06); }
+  .btn-block { width: 100%; }
+
+  .card {
+    background: var(--card);
+    border-radius: var(--radius);
+    box-shadow: var(--shadow-soft);
+    border: 1px solid var(--line);
+  }
+
+  .fade-up { animation: fadeUp .7s cubic-bezier(.2,.7,.3,1) both; }
+  @keyframes fadeUp { from { opacity: 0; transform: translateY(14px); } to { opacity: 1; transform: none; } }
+  @keyframes breathe { 0%,100%{ transform: scale(1); } 50%{ transform: scale(1.12); } }
+
+  /* ---------- Brand wave mark ----------
+     Base state is fully VISIBLE. Entrance keyframes use default fill (none),
+     so if the animation hangs play-pending it contributes nothing and the
+     drawn/visible base shows through. */
+  .wave-spark {
+    transform-box: fill-box; transform-origin: center;
+    animation: sparkPulse 2.8s ease-in-out infinite;
+  }
+  .wave-path.draw {
+    stroke-dasharray: 1; stroke-dashoffset: 0;          /* base: fully drawn */
+    animation: waveDraw 1s cubic-bezier(.45,.05,.25,1) .05s;
+  }
+  @keyframes waveDraw { from { stroke-dashoffset: 1; } to { stroke-dashoffset: 0; } }
+  @keyframes sparkPulse {
+    0%,100% { transform: scale(1); filter: drop-shadow(0 0 0 rgba(216,90,48,0)); }
+    50%     { transform: scale(1.18); filter: drop-shadow(0 0 5px rgba(216,90,48,0.55)); }
+  }
+
+  /* ---------- Elevated screen transitions ----------
+     Base state is VISIBLE; entrance keyframes use default fill (none) so a
+     play-pending hang falls back to the visible base instead of blanking. */
+  .screen-frame {
+    width: 100%; flex: 1; min-height: 0;
+    display: flex; flex-direction: column; align-items: center;
+  }
+  .screen-frame.tx-elevate { animation: txElevate .58s cubic-bezier(.2,.72,.26,1); }
+  .screen-frame.tx-fade    { animation: txFade .44s ease .06s; }
+  .screen-frame.tx-slide   { animation: txSlide .5s cubic-bezier(.2,.72,.26,1); }
+  /* transform-only entrances: base opacity stays 1, so a pinned/pending
+     animation degrades to "visible, maybe shifted" \u2014 never blank. */
+  @keyframes txElevate {
+    from { transform: translateY(26px) scale(.985); }
+    to   { transform: none; }
+  }
+  @keyframes txFade { from { opacity: 0; } to { opacity: 1; } }
+  @keyframes txSlide {
+    from { transform: translateX(34px); }
+    to   { transform: none; }
+  }
+  /* a screen handled by the frame transition shouldn't double up its own fade-up */
+  .tx-elevate > .fade-up, .tx-slide > .fade-up { animation: none; }
+
+  input, textarea {
+    font-family: var(--sans);
+    font-size: calc(1rem * var(--scale));
+  }
+  ::placeholder { color: #a8a3ba; }
+
+  @media (prefers-reduced-motion: reduce) {
+    *, *::before, *::after { animation-duration: .001ms !important; }
+  }
+
+  /* ---------- Feedback popup ---------- */
+  .fb-backdrop {
+    position: fixed; inset: 0; z-index: 80;
+    background: rgba(38,33,92,0.38);
+    backdrop-filter: blur(3px); -webkit-backdrop-filter: blur(3px);
+    display: grid; place-items: center; padding: 22px;
+    animation: fbFade .25s ease;
+  }
+  .fb-card {
+    width: 100%; max-width: 380px;
+    background: var(--card);
+    border-radius: 18px;
+    box-shadow: var(--shadow-lift);
+    border: 1px solid var(--line);
+    padding: 26px 24px 22px;
+  }
+  .fb-pop { animation: fbPop .42s cubic-bezier(.2,.8,.3,1.15); }
+  @keyframes fbFade { from { opacity: 0; } to { opacity: 1; } }
+  @keyframes fbPop {
+    from { transform: translateY(12px) scale(.96); }
+    to   { transform: none; }
+  }
+  .fb-reveal { animation: fbReveal .3s ease; }
+  @keyframes fbReveal { from { opacity: 0; transform: translateY(-4px); } to { opacity: 1; transform: none; } }
+  .fb-heart { animation: fbHeart .5s cubic-bezier(.2,.8,.3,1.3); }
+  @keyframes fbHeart { from { transform: scale(.4); } 60% { transform: scale(1.18); } to { transform: scale(1); } }
+  .fb-link {
+    background: none; border: none; cursor: pointer; padding: 4px 0;
+    color: var(--violet); font-family: var(--sans); font-size: 0.95rem; font-weight: 600;
+  }
+  .fb-link:hover { text-decoration: underline; }
+  .fb-skip {
+    display: block; width: 100%; margin-top: 12px; padding: 6px;
+    background: none; border: none; cursor: pointer;
+    color: var(--ink-soft); font-family: var(--sans); font-size: 0.9rem;
+  }
+  .fb-skip:hover { color: var(--dusk); }
+
+  /* ---------- Conversation starter chips ---------- */
+  .starter-chip:hover {
+    border-color: var(--coral);
+    transform: translateY(-1px);
+    box-shadow: 0 8px 20px -12px rgba(216,90,48,0.5);
+  }
+  .starter-chip:active { transform: translateY(0); }
+</style>
+</head>
+<body>
+<div id="root"></div>
+
+<script src="https://unpkg.com/react@18.3.1/umd/react.development.js" integrity="sha384-hD6/rw4ppMLGNu3tX5cjIb+uRZ7UkRJ6BPkLpg4hAu/6onKUg4lLsHAs9EBPT82L" crossorigin="anonymous"></script>
+<script src="https://unpkg.com/react-dom@18.3.1/umd/react-dom.development.js" integrity="sha384-u6aeetuaXnQ38mYT8rp6sbXaQe3NL9t+IBXmnYxwkUI2Hw4bsp2Wvmx4yRQF1uAm" crossorigin="anonymous"></script>
+<script src="https://unpkg.com/@babel/standalone@7.29.0/babel.min.js" integrity="sha384-m08KidiNqLdpJqLq95G/LEi8Qvjl/xUYll3QILypMoQ65QorJ9Lvtp2RXYGBFj1y" crossorigin="anonymous"></script>
+
+<script type="text/babel" src="tweaks-panel.jsx"></script>
+<script type="text/babel" src="veloa-shared.jsx"></script>
+<script type="text/babel" src="veloa-charts.jsx"></script>
+<script type="text/babel" src="veloa-landing.jsx"></script>
+<script type="text/babel" src="veloa-login.jsx"></script>
+<script type="text/babel" src="veloa-feedback.jsx"></script>
+<script type="text/babel" src="veloa-chat.jsx"></script>
+<script type="text/babel" src="veloa-preview.jsx"></script>
+<script type="text/babel" src="veloa-results.jsx"></script>
+<script type="text/babel" src="veloa-dashboard.jsx"></script>
+<script type="text/babel" src="veloa-volunteer.jsx"></script>
+<script type="text/babel" src="veloa-admin.jsx"></script>
+<script type="text/babel" src="veloa-settings.jsx"></script>
+<script type="text/babel" src="veloa-app.jsx"></script>
+</body>
+</html>
